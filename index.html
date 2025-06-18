@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>TrendStore Ads Automation</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- favicon -->
+<link rel="icon" type="image/png" href="favicon.png">
+
+<style>
+:root{--blue:#0b57d0;--bg:#f8f9fa;--gray:#666;}
+body{
+  font-family:system-ui,-apple-system,Arial,sans-serif;
+  margin:0;padding:2rem 1rem;background:var(--bg);line-height:1.6;
+}
+main{
+  max-width:880px;margin:auto;background:#fff;padding:2rem 2rem;
+  border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.06);
+}
+h1{margin-top:0;font-size:2rem;display:flex;align-items:center;gap:.8rem;}
+h2{margin-top:1.8rem;font-size:1.25rem;}
+
+/* screenshots */
+.mockups{
+  display:grid;gap:.8rem;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  margin-bottom:2.5rem;
+}
+.mockups figure{
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-end;
+  margin:0;
+}
+.mockups img{
+  width:90%;border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.05);
+  cursor:pointer;
+}
+.mockups figcaption{font-size:.8rem;text-align:center;margin-top:.35rem;}
+
+/* lightbox */
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.8);
+    display:none;align-items:center;justify-content:center;z-index:1000;}
+.lb img{max-width:90vw;max-height:90vh;border-radius:6px;}
+.lb-nav,.lb-close{
+  position:fixed;top:50%;translate:0 -50%;
+  font-size:2.2rem;color:#fff;cursor:pointer;user-select:none;
+}
+.lb-nav.prev{left:2vw;} .lb-nav.next{right:2vw;}
+.lb-close{top:8vh;right:4vw;font-size:2.4rem;}
+.lb-nav:hover,.lb-close:hover{color:#9ab;}
+
+@media(prefers-color-scheme:dark){
+  body{background:#111;color:#ddd;}
+  main{background:#1d1d1d;}
+}
+</style>
+</head>
+<body>
+
+<main>
+  <!-- логотип + название -->
+  <h1>
+    <img src="logo_full.png" width="140" height="140" alt="TrendStore logo">
+    TrendStore Ads Automation
+  </h1>
+
+  <p>
+    I’m a sole trader selling consumer goods on OLX.ua marketplace.<br>
+    To boost visibility I run my own Google Ads Search campaigns that
+    direct users to my listings there.
+  </p>
+
+  <h2>What the script does</h2>
+  <ul>
+    <li>Fetches search-volume data via Google Ads API Keyword Planner
+        (language UA, geo UA).</li>
+    <li>Saves a clean CSV report
+        (keyword, volume, competition, CPC range).</li>
+    <li>Helps me refine titles&nbsp;&amp;&nbsp;descriptions on OLX and
+        update keyword lists in my Search campaigns.</li>
+  </ul>
+
+  <h2>Data &amp; privacy</h2>
+  <p>
+    API data are stored locally for no longer than 60&nbsp;days,
+    kept on an encrypted disk and never shared with third parties.
+  </p>
+
+  <h2>Screenshots</h2>
+  <div class="mockups">
+    <figure>
+      <a href="screenshot-1.png" class="lb-link">
+        <img src="screenshot-1.png" alt="CSV report opened in spreadsheet">
+      </a>
+      <figcaption>CSV report opened in spreadsheet</figcaption>
+    </figure>
+    <figure>
+      <a href="screenshot-2.png" class="lb-link">
+        <img src="screenshot-2.png" alt="PyCharm console output">
+      </a>
+      <figcaption>Script output in PyCharm</figcaption>
+    </figure>
+    <figure>
+      <a href="screenshot-3.png" class="lb-link">
+        <img src="screenshot-3.png" alt="Active Search campaign">
+      </a>
+      <figcaption>Active Search campaign</figcaption>
+    </figure>
+  </div>
+
+  <!-- графический футер -->
+  <img src="footer.svg" alt="Contact information"
+       style="display:block;max-width:100%;height:auto;margin-top:3rem;">
+</main>
+
+<!-- lightbox overlay -->
+<div class="lb" id="lb">
+  <span class="lb-close" title="Close">✕</span>
+  <span class="lb-nav prev" title="Prev">❮</span>
+  <img>
+  <span class="lb-nav next" title="Next">❯</span>
+</div>
+
+<script>
+(() => {
+  const links=[...document.querySelectorAll('a.lb-link')];
+  if(!links.length) return;
+  const lb=document.getElementById('lb'),
+        img=lb.querySelector('img'),
+        prev=lb.querySelector('.prev'),
+        next=lb.querySelector('.next'),
+        close=lb.querySelector('.lb-close');
+  let idx=0;
+  function show(i){ idx=(i+links.length)%links.length;
+    img.src=links[idx].href; lb.style.display='flex'; }
+  function hide(){ lb.style.display='none'; }
+  links.forEach((a,i)=>a.addEventListener('click',e=>{
+    e.preventDefault(); show(i); }));
+  prev.onclick=()=>show(idx-1);
+  next.onclick=()=>show(idx+1);
+  close.onclick=hide;
+  document.addEventListener('keydown',e=>{
+    if(lb.style.display!=='flex') return;
+    if(e.key==='Escape') hide();
+    if(e.key==='ArrowLeft') show(idx-1);
+    if(e.key==='ArrowRight') show(idx+1);
+  });
+})();
+</script>
+
+</body>
+</html>
