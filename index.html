@@ -28,9 +28,16 @@ h2{margin-top:1.8rem;font-size:1.25rem;}
 .lb-close{top:8vh;right:4vw;font-size:2.4rem;}
 .lb-nav:hover,.lb-close:hover{color:#9ab;}
 
+/* prevent overflow on narrow screens */
+ol li{overflow-wrap:anywhere;word-break:break-word;}
+code{word-break:break-all;}
+
 /* dark mode & mobile tweaks */
 @media(prefers-color-scheme:dark){body{background:#111;color:#ddd;}main{background:#1d1d1d;}}
-@media(max-width:600px){h1{font-size:1.6rem;flex-direction:column;align-items:center;text-align:center;}h1 img{width:96px;height:96px;}}
+@media(max-width:600px){
+  h1{font-size:1.6rem;flex-direction:column;align-items:center;text-align:center;}
+  h1 img{width:96px;height:96px;}
+}
 </style>
 </head>
 <body>
@@ -71,9 +78,9 @@ h2{margin-top:1.8rem;font-size:1.25rem;}
   <h2>API workflow (details)</h2>
   <ol>
     <li><strong>Authentication</strong> — encrypted credentials in <code>.env</code>, OAuth&nbsp;2.0 refresh token.</li>
-    <li><strong>Single API call (read-only)</strong> — up&nbsp;to&nbsp;50
+    <li><strong>Single API call&nbsp;(read-only)</strong> — up&nbsp;to&nbsp;50
         <code>KeywordPlanIdeaService.generateKeywordIdeas</code> requests per run
-        (UA 1031 / UA 2276) using my MCC as <code>login_customer_id</code>.</li>
+        (UA&nbsp;1031&nbsp;/ UA&nbsp;2276) using my MCC as <code>login_customer_id</code>.</li>
     <li><strong>Frequency &amp; quota</strong> — on demand, max 10 runs per week; always within standard Google Ads API quotas.</li>
     <li><strong>Output</strong> — aggregated CSV report <code>data/ideas_YYYY-MM-DD.csv</code>.</li>
     <li><strong>Retention policy</strong> — cron <code>purge.py</code> deletes files older than 60&nbsp;days.</li>
@@ -82,7 +89,6 @@ h2{margin-top:1.8rem;font-size:1.25rem;}
         The tool is strictly read-only and never shares data externally.</li>
   </ol>
 
-  <!-- flow diagram image -->
   <h2>Flow diagram</h2>
   <img src="flow_diagram.svg"
        alt="Keyword-research workflow diagram"
@@ -99,7 +105,7 @@ h2{margin-top:1.8rem;font-size:1.25rem;}
   <h2>Tech stack</h2>
   <ul>
     <li>Python&nbsp;3.12</li>
-    <li>PyCharm Community&nbsp;Edition</li>
+    <li>PyCharm Community Edition</li>
     <li>macOS launchd cron (purge job)</li>
     <li>Data format — UTF-8 CSV</li>
   </ul>
