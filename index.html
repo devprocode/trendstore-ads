@@ -8,77 +8,29 @@
 
 <style>
 :root{--blue:#0b57d0;--bg:#f8f9fa;--gray:#666;}
-body{
-  font-family:system-ui,-apple-system,Arial,sans-serif;
-  margin:0;padding:2rem 1rem;background:var(--bg);line-height:1.6;
-}
-main{
-  max-width:880px;margin:auto;background:#fff;padding:2rem 2rem;
-  border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.06);
-}
-
-/* ---------- headline ---------- */
-h1{
-  margin-top:0;
-  font-size:2rem;
-  display:flex;
-  align-items:center;
-  gap:.8rem;
-}
+body{font-family:system-ui,-apple-system,Arial,sans-serif;margin:0;padding:2rem 1rem;background:var(--bg);line-height:1.6;}
+main{max-width:880px;margin:auto;background:#fff;padding:2rem 2rem;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,.06);}
+h1{margin-top:0;font-size:2rem;display:flex;align-items:center;gap:.8rem;}
 h1 img{width:140px;height:140px;}
-
 h2{margin-top:1.8rem;font-size:1.25rem;}
 
-/* ---------- screenshots grid ---------- */
-.mockups{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(240px,1fr));
-  grid-auto-rows:1fr;
-  gap:1.2rem;
-  margin-bottom:2.5rem;
-}
-.mockups figure{
-  display:flex;flex-direction:column;justify-content:flex-end;
-  margin:0;height:100%;padding:0 10%;
-}
-.mockups img{
-  width:100%;border-radius:8px;
-  box-shadow:0 2px 6px rgba(0,0,0,.05);
-  cursor:pointer;
-}
-.mockups figcaption{
-  width:100%;margin-top:.4rem;
-  font-size:.8rem;line-height:1.3;text-align:center;
-}
+/* screenshots grid */
+.mockups{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));grid-auto-rows:1fr;gap:1.2rem;margin-bottom:2.5rem;}
+.mockups figure{display:flex;flex-direction:column;justify-content:flex-end;margin:0;height:100%;padding:0 10%;}
+.mockups img{width:100%;cursor:pointer;}
+.mockups figcaption{width:100%;margin-top:.4rem;font-size:.8rem;line-height:1.3;text-align:center;}
 
-/* ---------- lightbox ---------- */
-.lb{position:fixed;inset:0;background:rgba(0,0,0,.8);
-    display:none;align-items:center;justify-content:center;z-index:1000;}
-.lb img{max-width:90vw;max-height:90vh;border-radius:6px;}
-.lb-nav,.lb-close{
-  position:fixed;top:50%;translate:0 -50%;
-  font-size:2.2rem;color:#fff;cursor:pointer;user-select:none;
-}
+/* lightbox */
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;align-items:center;justify-content:center;z-index:1000;}
+.lb img{max-width:90vw;max-height:90vh;}
+.lb-nav,.lb-close{position:fixed;top:50%;translate:0 -50%;font-size:2.2rem;color:#fff;cursor:pointer;user-select:none;}
 .lb-nav.prev{left:2vw;} .lb-nav.next{right:2vw;}
 .lb-close{top:8vh;right:4vw;font-size:2.4rem;}
 .lb-nav:hover,.lb-close:hover{color:#9ab;}
 
-/* ---------- dark mode ---------- */
-@media(prefers-color-scheme:dark){
-  body{background:#111;color:#ddd;}
-  main{background:#1d1d1d;}
-}
-
-/* ---------- mobile (≤600 px) ---------- */
-@media(max-width:600px){
-  h1{
-    font-size:1.6rem;        /* меньше шрифт */
-    flex-direction:column;   /* логотип сверху, текст снизу */
-    align-items:center;      /* логотип по центру */
-    text-align:center;       /* текст по центру */
-  }
-  h1 img{width:96px;height:96px;} /* компактный логотип */
-}
+/* dark mode & mobile tweaks */
+@media(prefers-color-scheme:dark){body{background:#111;color:#ddd;}main{background:#1d1d1d;}}
+@media(max-width:600px){h1{font-size:1.6rem;flex-direction:column;align-items:center;text-align:center;}h1 img{width:96px;height:96px;}}
 </style>
 </head>
 <body>
@@ -90,9 +42,21 @@ h2{margin-top:1.8rem;font-size:1.25rem;}
   </h1>
 
   <p>
-    I’m a sole trader selling consumer goods on OLX.ua marketplace.<br>
+    I’m a sole trader selling consumer goods on
+    <a href="https://trendstore.olx.ua/" target="_blank">OLX.ua marketplace</a>.<br>
     To boost visibility I run my own Google Ads Search campaigns that
     direct users to my listings there.
+  </p>
+
+  <h2>Business model</h2>
+  <p>
+    The in-house keyword-research tool automates collection and analysis of
+    historical Keyword Planner metrics. Based on the CSV report I manually
+    update keyword lists, negative keywords and bids in the Google Ads UI.
+    The tool is strictly internal and generates no external revenue.<br>
+    <strong>Using the API eliminates hours of manual work in the Keyword
+    Planner web interface and becomes essential as the number of OLX
+    listings grows.</strong>
   </p>
 
   <h2>What the script does</h2>
@@ -100,8 +64,44 @@ h2{margin-top:1.8rem;font-size:1.25rem;}
     <li>Fetches search-volume data via Google Ads API Keyword Planner
         (language UA, geo UA).</li>
     <li>Saves a clean CSV report (keyword, volume, competition, CPC range).</li>
-    <li>Helps me refine titles&nbsp;&amp;&nbsp;descriptions on OLX and
-        update keyword lists in my Search campaigns.</li>
+    <li>Helps refine titles&nbsp;&amp;&nbsp;descriptions on OLX and
+        update keyword lists in Search campaigns.</li>
+  </ul>
+
+  <h2>API workflow (details)</h2>
+  <ol>
+    <li><strong>Authentication</strong> — encrypted credentials in <code>.env</code>, OAuth&nbsp;2.0 refresh token.</li>
+    <li><strong>Single API call (read-only)</strong> — up&nbsp;to&nbsp;50
+        <code>KeywordPlanIdeaService.generateKeywordIdeas</code> requests per run
+        (UA 1031 / UA 2276) using my MCC as <code>login_customer_id</code>.</li>
+    <li><strong>Frequency &amp; quota</strong> — on demand, max 10 runs per week; always within standard Google Ads API quotas.</li>
+    <li><strong>Output</strong> — aggregated CSV report <code>data/ideas_YYYY-MM-DD.csv</code>.</li>
+    <li><strong>Retention policy</strong> — cron <code>purge.py</code> deletes files older than 60&nbsp;days.</li>
+    <li><strong>Manual optimisation</strong> — I open the CSV and manually update
+        keywords, negatives and bids in the Google Ads UI &amp; OLX store.
+        The tool is strictly read-only and never shares data externally.</li>
+  </ol>
+
+  <!-- flow diagram image -->
+  <h2>Flow diagram</h2>
+  <img src="flow_diagram.svg"
+       alt="Keyword-research workflow diagram"
+       style="width:100%;max-width:780px;height:auto;display:block;margin-inline:auto;">
+
+  <h2>Security &amp; access</h2>
+  <ul>
+    <li>One MCC and one child account — both owned by me.</li>
+    <li>Credentials stored in encrypted <code>.env</code> on a full-disk-encrypted PC.</li>
+    <li>Google account protected by 2-Step Verification (TOTP).</li>
+    <li>No third-party access; API data never shared or resold.</li>
+  </ul>
+
+  <h2>Tech stack</h2>
+  <ul>
+    <li>Python&nbsp;3.12</li>
+    <li>PyCharm Community&nbsp;Edition</li>
+    <li>macOS launchd cron (purge job)</li>
+    <li>Data format — UTF-8 CSV</li>
   </ul>
 
   <h2>Data &amp; privacy</h2>
@@ -114,15 +114,15 @@ h2{margin-top:1.8rem;font-size:1.25rem;}
   <div class="mockups">
     <figure>
       <a href="screenshot-1.png" class="lb-link">
-        <img src="screenshot-1.png" alt="CSV report opened in spreadsheet">
+        <img src="screenshot-1.png" alt="Source code in PyCharm">
       </a>
-      <figcaption>CSV report opened in spreadsheet</figcaption>
+      <figcaption>Source code in PyCharm</figcaption>
     </figure>
     <figure>
       <a href="screenshot-2.png" class="lb-link">
-        <img src="screenshot-2.png" alt="PyCharm console output">
+        <img src="screenshot-2.png" alt="CSV report opened in spreadsheet">
       </a>
-      <figcaption>Script output in PyCharm</figcaption>
+      <figcaption>CSV report opened in spreadsheet</figcaption>
     </figure>
     <figure>
       <a href="screenshot-3.png" class="lb-link">
@@ -154,11 +154,9 @@ h2{margin-top:1.8rem;font-size:1.25rem;}
         next=lb.querySelector('.next'),
         close=lb.querySelector('.lb-close');
   let idx=0;
-  function show(i){ idx=(i+links.length)%links.length;
-    img.src=links[idx].href; lb.style.display='flex'; }
-  function hide(){ lb.style.display='none'; }
-  links.forEach((a,i)=>a.addEventListener('click',e=>{
-    e.preventDefault(); show(i); }));
+  function show(i){idx=(i+links.length)%links.length;img.src=links[idx].href;lb.style.display='flex';}
+  function hide(){lb.style.display='none';}
+  links.forEach((a,i)=>a.addEventListener('click',e=>{e.preventDefault();show(i);}));
   prev.onclick=()=>show(idx-1);
   next.onclick=()=>show(idx+1);
   close.onclick=hide;
